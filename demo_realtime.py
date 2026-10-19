@@ -103,7 +103,7 @@ def plot(args, m):
         a.set_yticks(range(len(names)), names)
         a.invert_yaxis()
         a.axvline(0, color=MUTED, lw=0.8)
-        a.set_xlim(-0.6, 1.05)
+        a.set_xlim(-1.05, 1.05)
         a.set_xlabel("alignment with true gradient (4 probe seeds)")
         a.set_title(title, loc="left", color=INK)
     a = ax[2]
@@ -117,7 +117,7 @@ def plot(args, m):
     if "C_cluster_calibrate_only" in m:
         cal = [r["acc"] for r in m["C_cluster_calibrate_only"]]
         a.axvspan(min(cal), max(cal), color=ORANGE, alpha=0.12)
-        a.text(np.mean(cal), -0.75, "bias-only training", color=MUTED, ha="center")
+        a.text(np.mean(cal), 2.5, "bias-only\ntraining", color=MUTED, ha="center", va="center")
     a.set_yticks(range(len(tn)), tn)
     a.invert_yaxis()
     a.set_xlim(0, 1.05)

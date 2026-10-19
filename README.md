@@ -64,6 +64,18 @@ python demo.py --output runs/first_gate
 
 ![Fourth gate](docs/tuft.png)
 
+## Fifth gate: real-time credit, against a three-factor rule
+
+[`docs/REALTIME_CREDIT.md`](docs/REALTIME_CREDIT.md) (`realtime_gate.py`, `demo_realtime.py`, `tests/test_realtime_gate.py`): the soma fires its own pings, a late tuft context changes burst probability, synapses integrate calcium continuously, and training is evaluated on held-out jittered inputs.
+
+* **Sign theorem.** In one cell the Jacobian is an M-matrix, so every soma–synapse transfer impedance is positive and every active synapse's gradient has the sign of the error. Per-synapse credit can only change magnitudes.
+* **Real-time credit works** on a task the cell cannot solve by itself (left cluster high, right low): ping-local 4/4 held out, reshuffled labels at chance.
+* **A three-factor rule** (presynaptic activity × change in burst count) **matches it**: 4/4, same margins, equal bias and less single-trial variance.
+* **The clustered-vs-split task cannot rank credit rules:** labels reshuffled every epoch reach held-out 0.84, the same as either rule, because the built-in branch nonlinearity sorts the patterns once the weights are equal.
+* **Stopping test for this repository:** networks with inhibitory connections, the only place per-synapse credit could beat a three-factor rule.
+
+![Fifth gate](docs/realtime.png)
+
 ## Three different gradients
 
 Let `v_i` be the membrane voltage at compartment `i`, `g_ij` the axial conductance of an edge, and `I_i` an imposed synaptic current. The model uses unit capacitances and resting voltage zero:

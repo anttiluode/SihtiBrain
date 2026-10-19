@@ -116,6 +116,8 @@ That is real-time read/write in one cell, and it is the delta rule of RealTimeRe
 
 ## 6. Ledger
 
+* **Added after gate 5:** the clustered-vs-split task can be largely solved by uninformative training (labels reshuffled every epoch reach held-out 0.84 in gate 5) because the built-in branch nonlinearity already sorts the patterns once the weights are equal. The shuffled control here used one fixed wrong labelling, a weaker null. The *alignment* results of this gate are unaffected; the *training* table shows that the rule trains, not that it uses the labels beyond calibration. See `docs/REALTIME_CREDIT.md` §3C–D, where a left-vs-right task the cell cannot solve by itself confirms that two-ping credit does carry label information.
+
 * The free and teacher pings are separated in time by construction, and the synapse is assumed to hold the free calcium as a trace. How long that trace must last, and what happens when pings are self-generated at state-dependent rates, is not tested (next gate).
 * The teacher is a somatic current; the biological version is apical/contextual drive, not implemented.
 * The unblock curve is a sigmoid with midpoint above the operating voltages ("convex regime"); the exactness argument uses its exponential approximation.
