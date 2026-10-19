@@ -114,13 +114,23 @@ def updates(rt, x, y, rng, rule, context=True):
         dw = x * (b_l - b_e) / 5.0
     elif rule == "exact":
         dw, db = true_descent(rt.tree, x, y)
+    elif rule == "calibrate":                 # only the somatic bias learns
+        dw = np.zeros(4)
     else:
         raise ValueError(rule)
     return dw, db
 
 
-def jitter_set(rng, n_draws, lo=0.95, hi=1.05, y_hi=0.6, y_lo=0.3):
-    xs, ys = task(y_hi, y_lo)
+def side_task(y_hi=0.6, y_lo=0.3):
+    """Left cluster high, right cluster low.  The cell's built-in branch
+    nonlinearity is symmetric, so it cannot solve this by itself, and labels
+    shuffled every epoch cannot produce the needed left/right asymmetry."""
+    xl = np.array([1.0, 1.0, 0.0, 0.0]); xr = np.array([0.0, 0.0, 1.0, 1.0])
+    return [xl, xr], [y_hi, y_lo]
+
+
+def jitter_set(rng, n_draws, lo=0.95, hi=1.05, y_hi=0.6, y_lo=0.3, which="cluster"):
+    xs, ys = (task if which == "cluster" else side_task)(y_hi, y_lo)
     out_x, out_y = [], []
     for _ in range(n_draws):
         for x, y in zip(xs, ys):
@@ -139,14 +149,14 @@ def evaluate(tree, xs, ys):
 
 
 def train(seed, rule, trunk=8, epochs=150, lr=0.03, shuffle=False, context=True,
-          held_out_draws=5, **rt_kw):
+          held_out_draws=5, which="cluster", **rt_kw):
     r = np.random.default_rng(100 + seed)
     tree = TuftTree(trunk=trunk, w=r.uniform(0.3, 1.2, 4), b=r.uniform(-1, 0))
     rt = RealTime(tree, **rt_kw)
     rng = np.random.default_rng(seed)
     p = np.r_[tree.w, tree.b]; m = np.zeros(5); s = np.zeros(5)
     for ep in range(epochs):
-        xs, ys = jitter_set(rng, 1)
+        xs, ys = jitter_set(rng, 1, which=which)
         if shuffle:
             ys = list(rng.permutation(ys))
         step = np.zeros(5)
@@ -157,5 +167,5 @@ def train(seed, rule, trunk=8, epochs=150, lr=0.03, shuffle=False, context=True,
         m = 0.9 * m + 0.1 * step; s = 0.999 * s + 0.001 * step ** 2
         p = p + lr * (m / (1 - 0.9 ** (ep + 1))) / (np.sqrt(s / (1 - 0.999 ** (ep + 1))) + 1e-8)
         tree.w, tree.b = p[:4].copy(), float(p[4])
-    test_x, test_y = jitter_set(np.random.default_rng(10_000 + seed), held_out_draws)
+    test_x, test_y = jitter_set(np.random.default_rng(10_000 + seed), held_out_draws, which=which)
     return evaluate(tree, test_x, test_y), tree
