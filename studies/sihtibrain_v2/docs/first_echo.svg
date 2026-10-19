@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="265" viewBox="0 0 1000 265" role="img" aria-label="Two-window basal and apical ping read/write circuit">
+<rect width="1000" height="265" rx="16" fill="#0e1728"/>
+<g font-family="Arial,sans-serif" text-anchor="middle">
+<text x="500" y="35" fill="white" font-size="22" font-weight="bold">SihtiBrainV2: the return path changes the operator</text>
+<rect x="24" y="63" width="290" height="155" rx="14" fill="#12344d" stroke="#4ab1d5"/>
+<rect x="355" y="63" width="290" height="155" rx="14" fill="#301b4b" stroke="#a86de0"/>
+<rect x="686" y="63" width="290" height="155" rx="14" fill="#253720" stroke="#a1d56d"/>
+<g fill="white" font-size="17" font-weight="bold">
+<text x="169" y="93">1. Basal encoding</text><text x="500" y="93">2. Ping + apical context</text><text x="831" y="93">3. After reset</text></g>
+<g fill="#b7d8ed" font-size="14"><text x="169" y="129">Same soma output</text><text x="169" y="152">Different branch gradients</text><text x="169" y="184">Hidden local residue</text></g>
+<g fill="#e6c8ff" font-size="14"><text x="500" y="129">Apical gate x local trace</text><text x="500" y="152">Modulates return conductance</text><text x="500" y="184">Different somatic echoes</text></g>
+<g fill="#dbf6d2" font-size="14"><text x="831" y="129">Short-lived voltage erased</text><text x="831" y="152">Optional slow wire change</text><text x="831" y="184">Fresh ping reads stored W</text></g>
+<g stroke="#f4d36b" stroke-width="4"><path d="M319 139 H344"/><path d="M639 139 H674"/></g>
+<g fill="#f4d36b"><path d="M344 139 l-11 -7 v14z"/><path d="M674 139 l-11 -7 v14z"/></g>
+<text x="500" y="245" fill="#afbcd3" font-size="13">Toy circuit, not an anatomical reconstruction or a demonstrated visual object segmenter</text>
+</g></svg>
