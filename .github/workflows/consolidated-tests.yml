@@ -1,0 +1,42 @@
+name: Consolidated SihtiBrain CPU checks
+
+on:
+  push:
+    branches: [main, consolidate-oct19-gradient-lineage]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        target: [root, v2, v3, aibrain, aibrain_v2]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install CPU dependencies
+        run: python -m pip install "numpy>=1.24" "matplotlib>=3.7" pytest
+      - name: Run independent suite
+        shell: bash
+        run: |
+          case "${{ matrix.target }}" in
+            root) cd . ;;
+            v2) cd studies/sihtibrain_v2 ;;
+            v3) cd studies/sihtibrain_v3 ;;
+            aibrain) cd studies/operator_memory/aibrain ;;
+            aibrain_v2) cd studies/operator_memory/aibrain_v2 ;;
+          esac
+          python -m pytest -q tests --ignore=tests/test_demo.mjs
+  browser-demo:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Test AIBrain JavaScript demo
+        working-directory: studies/operator_memory/aibrain
+        run: node --test tests/test_demo.mjs
