@@ -31,6 +31,16 @@ python demo.py --output runs/first_gate
 
 `runs/first_gate/metrics.json` records the exact numbers and `sihtibrain.png` shows the traces. The checked-in figure was produced by the same command; rerun to compare it to the JSON.
 
+## Second gate: the ping as a nudge
+
+[`docs/PING_AS_NUDGE.md`](docs/PING_AS_NUDGE.md) (`ping_nudge.py`, `demo_ping_nudge.py`, `tests/test_ping_nudge.py`) gives the branch roots a *voltage-dependent* current and asks what the ping must be for "purify → summate → ping" to close:
+
+* **Why the soma was blind:** 4 of the tree's 7 cable modes have exactly zero amplitude at the soma, and the cluster-minus-split input lies entirely in them. A fixed ping in any linear tree is blind by superposition.
+* **Ping as error current = exact gradient:** injecting `−β(v₀ − y)` at the soma and relaxing again gives the gradient of the somatic loss by equilibrium propagation (error vs finite differences ∝ β², slope 2.02). The synaptic rule is local: presynaptic activity × how far the ping moved the voltage at that synapse; reciprocity `Z_i0 = Z_0i` makes it exact. On a cluster-detection task that **no passive tree can solve for any parameters** (proven floor, 4/6), error-pings train the nonlinear tree to **6/6 on 4/4 seeds**.
+* **Ping as kick:** with bistable branches and *identical somatic voltage*, the same ping flips only the clustered branch into a persistent plateau (any amplitude in [4.07, 6.28)). It reads hidden branch state and writes it.
+
+![Second gate](docs/ping_nudge.png)
+
 ## Three different gradients
 
 Let `v_i` be the membrane voltage at compartment `i`, `g_ij` the axial conductance of an edge, and `I_i` an imposed synaptic current. The model uses unit capacitances and resting voltage zero:
