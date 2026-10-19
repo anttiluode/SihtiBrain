@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="265" viewBox="0 0 960 265" role="img" aria-label="Queryable memory: input cue into passive conductance graph, value response, and selective write to connections.">
+<rect width="960" height="265" rx="16" fill="#111a2b"/>
+<g font-family="Arial,sans-serif" text-anchor="middle" fill="#e9f3ff">
+<text x="480" y="30" font-size="22" font-weight="bold">AIbrainV2 | memory as changed response geometry</text>
+<rect x="30" y="62" width="210" height="155" rx="14" stroke="#4c9de2" fill="#192e48"/>
+<rect x="306" y="62" width="338" height="155" rx="14" stroke="#9b82cd" fill="#2a2243"/>
+<rect x="708" y="62" width="222" height="155" rx="14" stroke="#70bc9a" fill="#183c39"/>
+<g font-weight="bold" font-size="16"><text x="135" y="96">16-bit query</text><text x="475" y="96">Stored 16×8 conductance graph</text><text x="819" y="96">8 value echoes</text></g>
+<g font-size="14"><text x="135" y="123">Four active cue bits</text><text x="135" y="149">Current can be reset</text><text x="475" y="122">W changes after experience</text><text x="475" y="146">H(W) z = [query, 0]</text><text x="475" y="170">Stored matrix: 512 bytes</text><text x="819" y="124">Read equilibrium voltage</text><text x="819" y="148">Compare direct q @ W</text></g>
+<g stroke="#f2c36f" fill="none" stroke-width="3"><path d="M242 140H300"/><path d="M646 140H701"/></g>
+<g fill="#f2c36f"><path d="M301 140l-9 -6v12z"/><path d="M702 140l-9 -6v12z"/></g>
+<text x="480" y="246" font-size="13" fill="#a9b8cf">Exact same stored weights and Hebbian writes in both readers · Retrieval differences come from the operator</text>
+</g></svg>
