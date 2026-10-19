@@ -1,0 +1,288 @@
+{
+ "post_result": true,
+ "A_behaviour": {
+  "top1_vocab": 0.77,
+  "way8": 0.8166666666666667,
+  "nobind_way8": 0.11416666666666667,
+  "chance_way8": 0.125
+ },
+ "by_layer": [
+  {
+   "layer": 0,
+   "B_cos_at_brother": 0.13083333333333333,
+   "B_cos_at_is": 0.125,
+   "C_ridge_at_brother": 0.1175,
+   "C_lambda_at_brother": 0.01,
+   "C_nobind_at_brother": 0.1175,
+   "C_ridge_at_is": 0.125,
+   "C_lambda_at_is": 0.01,
+   "C_nobind_at_is": 0.125
+  },
+  {
+   "layer": 1,
+   "B_cos_at_brother": 0.12333333333333334,
+   "B_cos_at_is": 0.12583333333333332,
+   "C_ridge_at_brother": 0.12083333333333333,
+   "C_lambda_at_brother": 1.0,
+   "C_nobind_at_brother": 0.1225,
+   "C_ridge_at_is": 0.13,
+   "C_lambda_at_is": 0.01,
+   "C_nobind_at_is": 0.12
+  },
+  {
+   "layer": 2,
+   "B_cos_at_brother": 0.12916666666666668,
+   "B_cos_at_is": 0.1225,
+   "C_ridge_at_brother": 0.12416666666666666,
+   "C_lambda_at_brother": 1.0,
+   "C_nobind_at_brother": 0.12333333333333334,
+   "C_ridge_at_is": 0.12333333333333334,
+   "C_lambda_at_is": 10.0,
+   "C_nobind_at_is": 0.12416666666666666
+  },
+  {
+   "layer": 3,
+   "B_cos_at_brother": 0.13416666666666666,
+   "B_cos_at_is": 0.1275,
+   "C_ridge_at_brother": 0.12083333333333333,
+   "C_lambda_at_brother": 1.0,
+   "C_nobind_at_brother": 0.12,
+   "C_ridge_at_is": 0.13,
+   "C_lambda_at_is": 10.0,
+   "C_nobind_at_is": 0.12833333333333333
+  },
+  {
+   "layer": 4,
+   "B_cos_at_brother": 0.155,
+   "B_cos_at_is": 0.125,
+   "C_ridge_at_brother": 0.16333333333333333,
+   "C_lambda_at_brother": 1.0,
+   "C_nobind_at_brother": 0.12166666666666667,
+   "C_ridge_at_is": 0.14166666666666666,
+   "C_lambda_at_is": 10.0,
+   "C_nobind_at_is": 0.1225
+  },
+  {
+   "layer": 5,
+   "B_cos_at_brother": 0.15,
+   "B_cos_at_is": 0.12166666666666667,
+   "C_ridge_at_brother": 0.16916666666666666,
+   "C_lambda_at_brother": 1.0,
+   "C_nobind_at_brother": 0.1175,
+   "C_ridge_at_is": 0.17416666666666666,
+   "C_lambda_at_is": 100.0,
+   "C_nobind_at_is": 0.115
+  },
+  {
+   "layer": 6,
+   "B_cos_at_brother": 0.14083333333333334,
+   "B_cos_at_is": 0.1275,
+   "C_ridge_at_brother": 0.175,
+   "C_lambda_at_brother": 1.0,
+   "C_nobind_at_brother": 0.1275,
+   "C_ridge_at_is": 0.17333333333333334,
+   "C_lambda_at_is": 10.0,
+   "C_nobind_at_is": 0.12916666666666668
+  },
+  {
+   "layer": 7,
+   "B_cos_at_brother": 0.14583333333333334,
+   "B_cos_at_is": 0.12583333333333332,
+   "C_ridge_at_brother": 0.17666666666666667,
+   "C_lambda_at_brother": 1.0,
+   "C_nobind_at_brother": 0.12583333333333332,
+   "C_ridge_at_is": 0.16583333333333333,
+   "C_lambda_at_is": 10.0,
+   "C_nobind_at_is": 0.12083333333333333
+  },
+  {
+   "layer": 8,
+   "B_cos_at_brother": 0.16333333333333333,
+   "B_cos_at_is": 0.125,
+   "C_ridge_at_brother": 0.1975,
+   "C_lambda_at_brother": 1.0,
+   "C_nobind_at_brother": 0.12416666666666666,
+   "C_ridge_at_is": 0.2075,
+   "C_lambda_at_is": 1.0,
+   "C_nobind_at_is": 0.12333333333333334
+  },
+  {
+   "layer": 9,
+   "B_cos_at_brother": 0.16,
+   "B_cos_at_is": 0.12083333333333333,
+   "C_ridge_at_brother": 0.165,
+   "C_lambda_at_brother": 1.0,
+   "C_nobind_at_brother": 0.11333333333333333,
+   "C_ridge_at_is": 0.19083333333333333,
+   "C_lambda_at_is": 1.0,
+   "C_nobind_at_is": 0.1175
+  },
+  {
+   "layer": 10,
+   "B_cos_at_brother": 0.2175,
+   "B_cos_at_is": 0.15833333333333333,
+   "C_ridge_at_brother": 0.375,
+   "C_lambda_at_brother": 1.0,
+   "C_nobind_at_brother": 0.11083333333333334,
+   "C_ridge_at_is": 0.65,
+   "C_lambda_at_is": 0.01,
+   "C_nobind_at_is": 0.11333333333333333
+  },
+  {
+   "layer": 11,
+   "B_cos_at_brother": 0.22416666666666665,
+   "B_cos_at_is": 0.16416666666666666,
+   "C_ridge_at_brother": 0.365,
+   "C_lambda_at_brother": 1.0,
+   "C_nobind_at_brother": 0.11916666666666667,
+   "C_ridge_at_is": 0.525,
+   "C_lambda_at_is": 0.1,
+   "C_nobind_at_is": 0.11833333333333333
+  },
+  {
+   "layer": 12,
+   "B_cos_at_brother": 0.31333333333333335,
+   "B_cos_at_is": 0.21333333333333335,
+   "C_ridge_at_brother": 0.5441666666666667,
+   "C_lambda_at_brother": 1.0,
+   "C_nobind_at_brother": 0.12833333333333333,
+   "C_ridge_at_is": 0.7216666666666667,
+   "C_lambda_at_is": 0.1,
+   "C_nobind_at_is": 0.12333333333333334
+  },
+  {
+   "layer": 13,
+   "B_cos_at_brother": 0.28583333333333333,
+   "B_cos_at_is": 0.22666666666666666,
+   "C_ridge_at_brother": 0.545,
+   "C_lambda_at_brother": 1.0,
+   "C_nobind_at_brother": 0.11833333333333333,
+   "C_ridge_at_is": 0.6708333333333333,
+   "C_lambda_at_is": 0.1,
+   "C_nobind_at_is": 0.12083333333333333
+  },
+  {
+   "layer": 14,
+   "B_cos_at_brother": 0.4141666666666667,
+   "B_cos_at_is": 0.26166666666666666,
+   "C_ridge_at_brother": 0.7216666666666667,
+   "C_lambda_at_brother": 1.0,
+   "C_nobind_at_brother": 0.12916666666666668,
+   "C_ridge_at_is": 0.7733333333333333,
+   "C_lambda_at_is": 1.0,
+   "C_nobind_at_is": 0.13666666666666666
+  },
+  {
+   "layer": 15,
+   "B_cos_at_brother": 0.37833333333333335,
+   "B_cos_at_is": 0.2991666666666667,
+   "C_ridge_at_brother": 0.6441666666666667,
+   "C_lambda_at_brother": 10.0,
+   "C_nobind_at_brother": 0.1275,
+   "C_ridge_at_is": 0.7266666666666667,
+   "C_lambda_at_is": 1.0,
+   "C_nobind_at_is": 0.13416666666666666
+  },
+  {
+   "layer": 16,
+   "B_cos_at_brother": 0.32166666666666666,
+   "B_cos_at_is": 0.2975,
+   "C_ridge_at_brother": 0.6366666666666667,
+   "C_lambda_at_brother": 1.0,
+   "C_nobind_at_brother": 0.13916666666666666,
+   "C_ridge_at_is": 0.645,
+   "C_lambda_at_is": 10.0,
+   "C_nobind_at_is": 0.1225
+  },
+  {
+   "layer": 17,
+   "B_cos_at_brother": 0.26166666666666666,
+   "B_cos_at_is": 0.1825,
+   "C_ridge_at_brother": 0.8741666666666666,
+   "C_lambda_at_brother": 0.1,
+   "C_nobind_at_brother": 0.14666666666666667,
+   "C_ridge_at_is": 0.9633333333333334,
+   "C_lambda_at_is": 0.1,
+   "C_nobind_at_is": 0.14166666666666666
+  },
+  {
+   "layer": 18,
+   "B_cos_at_brother": 0.24,
+   "B_cos_at_is": 0.16666666666666666,
+   "C_ridge_at_brother": 0.8458333333333333,
+   "C_lambda_at_brother": 0.01,
+   "C_nobind_at_brother": 0.14333333333333334,
+   "C_ridge_at_is": 0.9658333333333333,
+   "C_lambda_at_is": 0.1,
+   "C_nobind_at_is": 0.13583333333333333
+  },
+  {
+   "layer": 19,
+   "B_cos_at_brother": 0.215,
+   "B_cos_at_is": 0.16916666666666666,
+   "C_ridge_at_brother": 0.8666666666666667,
+   "C_lambda_at_brother": 0.1,
+   "C_nobind_at_brother": 0.13833333333333334,
+   "C_ridge_at_is": 0.965,
+   "C_lambda_at_is": 0.1,
+   "C_nobind_at_is": 0.12583333333333332
+  },
+  {
+   "layer": 20,
+   "B_cos_at_brother": 0.19666666666666666,
+   "B_cos_at_is": 0.1375,
+   "C_ridge_at_brother": 0.8483333333333334,
+   "C_lambda_at_brother": 0.1,
+   "C_nobind_at_brother": 0.145,
+   "C_ridge_at_is": 0.9575,
+   "C_lambda_at_is": 0.01,
+   "C_nobind_at_is": 0.13
+  },
+  {
+   "layer": 21,
+   "B_cos_at_brother": 0.18416666666666667,
+   "B_cos_at_is": 0.14416666666666667,
+   "C_ridge_at_brother": 0.8541666666666666,
+   "C_lambda_at_brother": 0.1,
+   "C_nobind_at_brother": 0.14416666666666667,
+   "C_ridge_at_is": 0.9641666666666666,
+   "C_lambda_at_is": 0.1,
+   "C_nobind_at_is": 0.12916666666666668
+  },
+  {
+   "layer": 22,
+   "B_cos_at_brother": 0.21916666666666668,
+   "B_cos_at_is": 0.15583333333333332,
+   "C_ridge_at_brother": 0.81,
+   "C_lambda_at_brother": 0.01,
+   "C_nobind_at_brother": 0.12,
+   "C_ridge_at_is": 0.96,
+   "C_lambda_at_is": 0.1,
+   "C_nobind_at_is": 0.13833333333333334
+  },
+  {
+   "layer": 23,
+   "B_cos_at_brother": 0.21333333333333335,
+   "B_cos_at_is": 0.15666666666666668,
+   "C_ridge_at_brother": 0.8366666666666667,
+   "C_lambda_at_brother": 0.1,
+   "C_nobind_at_brother": 0.11916666666666667,
+   "C_ridge_at_is": 0.9525,
+   "C_lambda_at_is": 0.1,
+   "C_nobind_at_is": 0.14
+  },
+  {
+   "layer": 24,
+   "B_cos_at_brother": 0.2275,
+   "B_cos_at_is": 0.16,
+   "C_ridge_at_brother": 0.69,
+   "C_lambda_at_brother": 1.0,
+   "C_nobind_at_brother": 0.11083333333333334,
+   "C_ridge_at_is": 0.9058333333333334,
+   "C_lambda_at_is": 0.1,
+   "C_nobind_at_is": 0.13416666666666666
+  }
+ ],
+ "seconds": 119.17143177986145,
+ "model": "Qwen/Qwen2.5-0.5B"
+}
