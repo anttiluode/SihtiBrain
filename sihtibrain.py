@@ -13,8 +13,8 @@ class Circuit:
              (4, 5, 0.5), (4, 6, 0.5))
 
     def __init__(self, leak=0.15):
-        if leak <= 0:
-            raise ValueError("leak must be positive")
+        if not np.isfinite(leak) or leak <= 0:
+            raise ValueError("leak must be finite and positive")
         self.leak = float(leak)
         self.laplacian = np.zeros((7, 7), dtype=float)
         for i, j, conductance in self.EDGES:
@@ -33,8 +33,9 @@ class Circuit:
     def run(self, stimulus, *, coincidence_gain=0., steps=700, dt=0.02,
             soma_pulse=None):
         current = self._stimulus(stimulus).copy()
-        if coincidence_gain < 0 or steps < 1 or dt <= 0:
-            raise ValueError("gain, steps, and dt must be nonnegative, positive, positive")
+        if (not np.isfinite(coincidence_gain) or not np.isfinite(dt)
+                or coincidence_gain < 0 or steps < 1 or dt <= 0):
+            raise ValueError("gain and dt must be finite; gain >= 0, steps >= 1, dt > 0")
         if dt * (max(np.linalg.eigvalsh(self.laplacian)) + self.leak) >= 2:
             raise ValueError("dt is too large for explicit Euler stability")
         if soma_pulse is not None:

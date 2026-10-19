@@ -61,7 +61,7 @@ def main():
         ax.scatter(x, y, s=500 if i == 0 else 340,
                    color="#16a6a2" if cluster[i] else "#233453", zorder=1)
         ax.text(x, y, str(i), ha="center", va="center", color="white", weight="bold")
-    ax.text(0, 2.7, "Cluster: leaves 2, 3   •   Split: leaves 2, 5",
+    ax.text(0, 2.7, "Highlighted: cluster (2, 3). Split moves 3 to 5.",
             ha="center", fontsize=10)
     ax.set(xlim=(-2.3, 2.3), ylim=(-0.5, 3), title="Same input count and distance")
     ax.axis("off")

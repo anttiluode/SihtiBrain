@@ -45,6 +45,18 @@ class CircuitTests(unittest.TestCase):
         np.testing.assert_allclose(clustered[:, 0], split[:, 0], atol=1e-12)
         self.assertGreater(abs(clustered[-1, 1] - split[-1, 1]), 0.1)
 
+    def test_nonfinite_parameters_are_rejected(self):
+        for value in (float('nan'), float('inf')):
+            with self.subTest(parameter='leak', value=value):
+                with self.assertRaises(ValueError):
+                    Circuit(leak=value)
+            with self.subTest(parameter='gain', value=value):
+                with self.assertRaises(ValueError):
+                    self.circuit.run(self.cluster, coincidence_gain=value)
+            with self.subTest(parameter='dt', value=value):
+                with self.assertRaises(ValueError):
+                    self.circuit.run(self.cluster, dt=value)
+
 
 if __name__ == '__main__':
     unittest.main()
