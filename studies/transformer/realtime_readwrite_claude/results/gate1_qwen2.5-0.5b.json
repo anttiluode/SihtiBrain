@@ -1,0 +1,143 @@
+{
+ "chosen": {
+  "layer": 14,
+  "d": 64,
+  "whiten": true
+ },
+ "selection": [
+  {
+   "layer": 14,
+   "d": 64,
+   "whiten": true,
+   "select_two_hop": 0.6625
+  },
+  {
+   "layer": 14,
+   "d": 64,
+   "whiten": false,
+   "select_two_hop": 0.16875
+  },
+  {
+   "layer": 14,
+   "d": 128,
+   "whiten": true,
+   "select_two_hop": 0.3625
+  },
+  {
+   "layer": 14,
+   "d": 128,
+   "whiten": false,
+   "select_two_hop": 0.1875
+  },
+  {
+   "layer": 14,
+   "d": 256,
+   "whiten": true,
+   "select_two_hop": 0.2375
+  },
+  {
+   "layer": 14,
+   "d": 256,
+   "whiten": false,
+   "select_two_hop": 0.19375
+  },
+  {
+   "layer": 17,
+   "d": 64,
+   "whiten": true,
+   "select_two_hop": 0.6375
+  },
+  {
+   "layer": 17,
+   "d": 64,
+   "whiten": false,
+   "select_two_hop": 0.25
+  },
+  {
+   "layer": 17,
+   "d": 128,
+   "whiten": true,
+   "select_two_hop": 0.275
+  },
+  {
+   "layer": 17,
+   "d": 128,
+   "whiten": false,
+   "select_two_hop": 0.25625
+  },
+  {
+   "layer": 17,
+   "d": 256,
+   "whiten": true,
+   "select_two_hop": 0.1875
+  },
+  {
+   "layer": 17,
+   "d": 256,
+   "whiten": false,
+   "select_two_hop": 0.2625
+  },
+  {
+   "layer": 18,
+   "d": 64,
+   "whiten": true,
+   "select_two_hop": 0.6
+  },
+  {
+   "layer": 18,
+   "d": 64,
+   "whiten": false,
+   "select_two_hop": 0.2625
+  },
+  {
+   "layer": 18,
+   "d": 128,
+   "whiten": true,
+   "select_two_hop": 0.275
+  },
+  {
+   "layer": 18,
+   "d": 128,
+   "whiten": false,
+   "select_two_hop": 0.25625
+  },
+  {
+   "layer": 18,
+   "d": 256,
+   "whiten": true,
+   "select_two_hop": 0.2125
+  },
+  {
+   "layer": 18,
+   "d": 256,
+   "whiten": false,
+   "select_two_hop": 0.25625
+  }
+ ],
+ "test": {
+  "two_hop": 0.6175,
+  "two_hop_wilson95": [
+   0.5833364183865161,
+   0.6505405046291627
+  ],
+  "no_memory": 0.12125,
+  "shuffled_binding": 0.06,
+  "in_context_ceiling": 0.22875,
+  "one_hop": 0.9825,
+  "hop1_lands_on_right_name": 0.61875,
+  "raw_keys_two_hop": 0.66375,
+  "raw_keys_one_hop": 0.9975,
+  "sentence_end_two_hop": 0.1275,
+  "sentence_end_one_hop": 0.1525,
+  "oracle_table": 1.0,
+  "n_questions": 800
+ },
+ "decision": "FAIL",
+ "criteria": {
+  "two_hop_min": 0.8,
+  "controls_max": 0.25,
+  "chance": 0.125
+ },
+ "seconds": 189.75068163871765,
+ "model": "Qwen/Qwen2.5-0.5B"
+}

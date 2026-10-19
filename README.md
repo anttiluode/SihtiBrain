@@ -1,5 +1,7 @@
 # SihtiBrain
 
+> **19 October 2026 consolidation:** The original gradient/dendrite/somatic ping experiments remain at the root. The V2/V3 continuations, memory controls and Qwen side studies now live under [studies/](studies/README.md). See the [research map and next gradient gate](docs/RESEARCH_MAP_2026-10-19.md) before interpreting any claimed result. The transformer experiments are **archived side studies**, not the proposed feedback mechanism.
+
 **A small experiment about what a dendrite keeps, what a soma sees, and what a spike can report.**
 
 The motivating thought was: a dendrite seems to *purify* a signal; perhaps the lost-looking detail is present as local gradients; the soma sums them; the spike keeps the process moving. The attached Gemini discussion extended this into automatic object basins and spikes that kick a system out of an energy valley. This repository tests the first part and marks the remaining parts as hypotheses.
