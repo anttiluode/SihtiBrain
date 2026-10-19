@@ -4,7 +4,7 @@
 
 ![Gate 3](ping_state.png)
 
-Reproduce: `python demo_ping_state.py` (≈12 min CPU) → `runs/ping_state/`; tests: `python -m unittest tests.test_ping_state -v`.
+Reproduce: `python demo_ping_state.py` (≈12 min CPU) → `runs/ping_state/` (`--replot` redraws from saved metrics); tests: `python -m unittest tests.test_ping_state -v`.
 
 ## 0. Where the two branches stood
 
@@ -58,9 +58,45 @@ Four consequences, each measured:
 
 ## 3. Measurements
 
-*(filled from `runs/ping_state/metrics.json`)*
+*(from `docs/ping_state_metrics.json`)*
 
-RESULTS_PLACEHOLDER
+Alignment = cosine between the six patterns' local updates (concatenated) and the true gradient, at **probe states** (each seed after 30 epochs of exact EqProp, where the errors have mixed signs). At the initial state every output overshoots every target, so even shuffled labels align; that measurement would be meaningless and is not used.
+
+**A. Sign law** (panel A). With the unblock midpoint above the operating leaf voltages, alignment is ≈ +0.99 for ping amplitude 2. Moving the midpoint down into and below the operating range flips it to ≈ −1.0. A huge ping (amplitude 32) carries the local voltage past the midpoint by itself and lowers alignment to ≈ 0.7 even in the "safe" range.
+
+**B. What the credit survives** (alignment, 4 seeds):
+
+| Condition | Alignment |
+|---|---|
+| ping, fractional Ca | 0.965 – 1.000 |
+| ping, absolute Ca | 0.681 – 0.968 |
+| synapse past the unblock midpoint | −0.999 – −0.986 |
+| bAP attenuation ×10, non-reciprocal | 0.80 – 0.98 |
+| … with a huge ping (amp 32) | 0.45 – 0.72 |
+| waveform modulation 0.25 with Brunner sign flip (≈ measured depth) | 0.956 – 0.996 |
+| waveform modulation 1 with Brunner sign flip | 0.845 – 0.953 |
+| waveform modulation 1, uniform sign | 0.976 – 0.999 |
+| Ca read noise 3 %, weak teacher (β = 0.02) | 0.13 – 0.65 |
+| Ca read noise 10 %, strong teacher (β = 0.2) | 0.31 – 0.84 |
+| shuffled teacher | −0.84 – +0.39 |
+| no ping | 0 exactly |
+
+**C. Training** (300 epochs, Adam on the local updates, 4 seeds; "solve" = 6/6 patterns):
+
+| Condition | Solve | Somatic margin |
+|---|---|---|
+| exact EqProp nudge (gate 2 reference) | 4/4 | +0.204 – +0.208 |
+| **two pings, fractional Ca** | **4/4** | **+0.142** |
+| two pings, absolute Ca | 0/4 | −0.504 – +0.011 |
+| synapse past the unblock midpoint | 0/4 | −2.579 – −0.629 (wrong patterns win) |
+| bAP attenuation ×10 | 4/4 | +0.102 |
+| waveform modulation 1, Brunner flip | 1/4 | −1.653 – +0.133 |
+| shuffled teacher | 1/4 | −0.234 – +0.142 |
+| no ping (weights frozen; only the somatic bias learns) | 0/4 | −0.839 – −0.540 |
+
+**D. What each synapse measures vs what it needs** (panel D, β = 0.02, 48 synapse samples). Linear tree: the measured log-ratio equals the needed Δv_i to a maximum relative deviation of 6.5 × 10⁻⁵. Nonlinear tree: r = 0.989, maximum relative deviation 0.37 — the residual is the second term of §2, the ping's own shape changing with branch state.
+
+**Two corrections to numbers stated earlier in conversation.** (1) Read-noise tolerance measured at the *initial* state looked generous (alignment ≥ 0.9 at 1–3 % noise). At probe states it is much worse (table above). Calcium read noise, not waveform shape, is the practical weak point of the two-ping comparison. (2) Alignment does not predict training by itself: deep sign-flipped modulation keeps alignment 0.85–0.95 yet solves 1/4, because its wrong-signed part is systematic and accumulates.
 
 ## 4. What "the ping up and down" now means
 
@@ -84,8 +120,28 @@ That is real-time read/write in one cell, and it is the delta rule of RealTimeRe
 * The teacher is a somatic current; the biological version is apical/contextual drive, not implemented.
 * The unblock curve is a sigmoid with midpoint above the operating voltages ("convex regime"); the exactness argument uses its exponential approximation.
 * Seven compartments, dimensionless, one task, four seeds, Adam on the local updates (Adam normalises per-parameter scale, which partly hides magnitude distortion — the absolute-rule failure survives it anyway).
-* **Prior art, closest first.** Clopath, Büsing, Vasilaki & Gerstner (Nat. Neurosci. 2010): voltage-based plasticity where potentiation needs presynaptic activity and *local* postsynaptic voltage above a threshold — the same ingredients, without the two-ping comparison. Urbanczik & Senn (Neuron 2014): the error is formed locally as the difference between the somatic spike and the dendrite's prediction. Scellier & Bengio (2017): the two-phase comparison. Graupner & Brunel (PNAS 2012) and Shouval, Bear & Cooper (PNAS 2002): calcium-level plasticity rules. Brunner & Szabadics (Nat. Commun. 2016) and Martin-Burgos et al. (bioRxiv 2026): the state-dependent waveform. What is specific here: the exact log-ratio identity, the cancellation of bAP non-reciprocity, the convex-regime sign law with its inverted-task failure, and the size of the waveform channel at measured depth.
+* **Prior art, closest first.** Guerguiev, Lillicrap & Richards (eLife 2017): segregated apical dendrites deliver the target; each hidden unit yields one apical plateau in a forward phase and one in a target phase, and learning is driven by their difference — the two-window structure of this gate, at the level of plateaus rather than synaptic calcium. Clopath, Büsing, Vasilaki & Gerstner (Nat. Neurosci. 2010): voltage-based plasticity where potentiation needs presynaptic activity and *local* postsynaptic voltage above a threshold — the same ingredients, without the two-ping comparison. Urbanczik & Senn (Neuron 2014): the error is formed locally as the difference between the somatic spike and the dendrite's prediction. Scellier & Bengio (2017): the two-phase comparison. Graupner & Brunel (PNAS 2012) and Shouval, Bear & Cooper (PNAS 2002): calcium-level plasticity rules. Brunner & Szabadics (Nat. Commun. 2016) and Martin-Burgos et al. (bioRxiv 2026): the state-dependent waveform. What is specific here: the exact log-ratio identity, the cancellation of bAP non-reciprocity, the convex-regime sign law with its inverted-task failure, and the size of the waveform channel at measured depth.
 
-## 7. Next gate
 
-Make it run in real time: the soma emits its own pings when it crosses threshold (rate depends on state), the teacher arrives with a delay, and each synapse's calcium trace decays with τ. Measure the window of τ and delay over which the update still aligns, and whether state-dependent ping *rate* contaminates the fractional comparison. That is the step from "two pings" to a living read/write loop.
+## 7. After the divergence (2026-10-19, written after reading Gemini's critique and the "time windows as lenses" picture)
+
+**The teacher is the later window.** The objection to gates 2–3 was that a somatic teacher current is an external supervisor. The cortical picture puts the context at the apical tuft instead: "earlier window: constrained local interpretation → later window: richer contextual state". That is exactly this gate's two pings. The first samples each synapse before context arrives, the second while it is present, and
+
+```
+dw_i ∝ x_i · [ v_i(later window) − v_i(earlier window) ]
+```
+
+So moving the teacher to the tuft does not remove it; it says where it lives. Guerguiev et al. 2017 built this arrangement with apical plateaus.
+
+**The limit on "no teacher".** If the later window carries nothing the basal input did not already have — if it is only the cell's own echo — then "make the early state match the late state" is satisfied by any weights: the self-supervised collapse problem. A loop with no outside information can carve basins and hold state (gate 2's plateau kick), but it cannot learn a task. "Contextual" has to mean information from outside the cell's own input: other columns, another modality, later evidence.
+
+**Geometry decides what the ping must carry.** In this gate the context enters at the soma, so every synapse receives it passively through the cable and the ping only samples it; waveform modulation at measured depth contributed nothing. In a real L5 cell the tuft is far from the basal synapses and passive tuft-to-basal transfer is weak. There the context can only reach basal synapses through the somatic event — a burst versus a single spike (Payeur et al. 2021), or a state-shaped waveform (Brunner & Szabadics 2016; Martin-Burgos et al. 2026). With context at the tuft, the shaped ping may be the only channel rather than a negligible one.
+
+**Two claims from the critique, checked.**
+* *"L2/3 dendritic XOR is the residue extractor (fires when A ≠ B)."* Gidon et al. 2020's dendritic calcium spikes are largest near threshold and weaker for stronger input. XOR follows because A alone or B alone is near threshold and A + B overshoots. That is a band-pass on input *amount*, not a detector of A ≠ B, so it is not a spatial-gradient (residue) extractor.
+* *"A blind somatic ping's echo separates the patterns without a teacher."* That is gate 2's small-ping curvature probe, measured there at about a 2.6 % difference at matched somatic voltage. Real, but weak; the strong unsupervised read was the barrier kick.
+
+## 8. Next gate
+
+1. **Context at the tuft.** A two-zone tree (basal branches, soma, long trunk, tuft); the teacher enters at the tuft. Measure how much credit reaches basal synapses passively versus through a burst-coded or waveform-coded somatic ping, against shuffled-context and no-context controls.
+2. **Real time.** The soma emits its own pings when it crosses threshold, the context arrives with a delay, and each synapse's calcium trace decays with τ. Measure the window of τ and delay over which the update still aligns, and whether state-dependent ping *rate* contaminates the fractional comparison.

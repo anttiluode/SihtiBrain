@@ -41,6 +41,18 @@ python demo.py --output runs/first_gate
 
 ![Second gate](docs/ping_nudge.png)
 
+## Third gate: the ping with state, up and down
+
+[`docs/PING_WITH_STATE.md`](docs/PING_WITH_STATE.md) (`ping_state.py`, `demo_ping_state.py`, `tests/test_ping_state.py`) removes the error current. A weak teacher shifts the soma, and two returning pings (one before the teacher, one during) evoke calcium at each active synapse through an NMDA-like unblock. Each synapse writes the fractional change in its own calcium. No signal anywhere encodes the error.
+
+* **Exact in the linear tree:** below the unblock threshold, `log(Ca_teach / Ca_free) / k = Δv_i`, the equilibrium-propagation update (max deviation 6.5e-5), at any ping amplitude. The credit travels in the slow, reciprocal cable; the ping only samples it, so uneven bAP attenuation cancels.
+* **Trains the nonlinear tree:** 4/4 seeds, 6/6 patterns, margin +0.142; absolute-calcium comparison 0/4; shuffled teacher 1/4; no ping 0/4.
+* **Sign law:** a synapse whose local voltage plus ping sits past the unblock midpoint gets inverted credit (alignment ≈ −0.99) and the tree learns the opposite task.
+* **Spike shape that varies with state** at the measured depth (~8%) neither helps nor hurts, even with Brunner's proximal/distal sign flip. Calcium read noise is the real weak point.
+* **After the divergence:** the teacher is the "later window" at the apical tuft (prior art: Guerguiev, Lillicrap & Richards 2017). A loop with no outside information can hold state but cannot learn a task. The next gate puts the context at the tuft, where the shaped ping may become the only channel to basal synapses.
+
+![Third gate](docs/ping_state.png)
+
 ## Three different gradients
 
 Let `v_i` be the membrane voltage at compartment `i`, `g_ij` the axial conductance of an edge, and `I_i` an imposed synaptic current. The model uses unit capacitances and resting voltage zero:

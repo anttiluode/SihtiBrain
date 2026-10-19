@@ -36,10 +36,25 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--output", type=Path, default=Path("runs/ping_state"))
     ap.add_argument("--epochs", type=int, default=300)
+    ap.add_argument("--replot", action="store_true",
+                    help="redraw from an existing metrics.json; recompute only panel D")
     args = ap.parse_args()
     args.output.mkdir(parents=True, exist_ok=True)
     xs, ys = task(hi=0.6, lo=0.3)
     trees = probe_trees(xs, ys)
+    if args.replot:
+        m = json.loads((args.output / "metrics.json").read_text())
+        thrs = np.array(m["A_thresholds"])
+        leafv = np.array(m["A_operating_leaf_voltage_range"])
+        sign_law = {float(a): np.array(v) for a, v in m["A_alignment_by_threshold"].items()}
+        robust = m["B_alignment"]
+        trained = m["C_training"]
+    else:
+        m, thrs, leafv, sign_law, robust, trained = compute(args, xs, ys, trees)
+    plot(args, m, xs, ys, trees, thrs, leafv, sign_law, robust, trained)
+
+
+def compute(args, xs, ys, trees):
     m = {"units": "dimensionless", "probe": "30 epochs of exact EqProp per seed"}
 
     def al(rd, beta=0.02, noise_seed=None, **kw):
@@ -103,20 +118,37 @@ def main():
         trained[name] = res
         print(name, [(r["correct_of_6"], round(r["margin"], 3)) for r in res], flush=True)
     m["C_training"] = trained
+    return m, thrs, leafv, sign_law, robust, trained
 
-    # D. one synapse, up and down --------------------------------------------
-    t = trees[0]; x = xs[0]; y = ys[0]
+
+def measured_vs_needed(trees, xs, ys, beta=0.02, linear=False):
+    """For every active synapse: (dv_i the EqProp update needs,
+    log(Ca_teach/Ca_free)/k the synapse actually measures)."""
+    from ping_nudge import Tree
     rd = PingReadout(**BASE)
-    v0 = t.relax(x)
-    vb = t.relax(x, v0=v0, nudge=SomaNudge(0.2, y))
-    d0 = rd.local_ping(t, v0)[:, 0] + v0[2]
-    db = rd.local_ping(t, vb)[:, 0] + vb[2]
-    ca0 = rd.calcium(t, v0, x)[0]; cab = rd.calcium(t, vb, x)[0]
-    m["D"] = {"leaf": 2, "v_free": float(v0[2]), "v_teach": float(vb[2]),
-              "soma_free": float(v0[0]), "soma_teach": float(vb[0]), "target": y,
-              "Ca_free": float(ca0), "Ca_teach": float(cab),
-              "log_ratio_over_k": float(np.log(cab / ca0) / 4.0),
-              "dv_local": float(vb[2] - v0[2])}
+    need, got = [], []
+    for t in trees:
+        if linear:
+            t = Tree(a=0.0, w=t.w, b=t.b)
+        for x, y in zip(xs, ys):
+            v0 = t.relax(x)
+            vb = t.relax(x, v0=v0, nudge=SomaNudge(beta, y))
+            ca0, cab = rd.calcium(t, v0, x), rd.calcium(t, vb, x)
+            act = np.asarray(x) > 0
+            need += list((vb[list(LEAVES)] - v0[list(LEAVES)])[act])
+            got += list((np.log(cab[act] / ca0[act])) / rd.ca_k)
+    return np.array(need), np.array(got)
+
+
+def plot(args, m, xs, ys, trees, thrs, leafv, sign_law, robust, trained):
+    # D. what each synapse measures vs what EqProp needs ----------------------
+    need_nl, got_nl = measured_vs_needed(trees, xs, ys)
+    need_li, got_li = measured_vs_needed(trees, xs, ys, linear=True)
+    rel = lambda a, b: float(np.max(np.abs(a - b)) / np.max(np.abs(a)))
+    m["D"] = {"beta": 0.02, "n_synapse_samples": int(len(need_nl)),
+              "nonlinear_max_rel_dev": rel(need_nl, got_nl),
+              "nonlinear_corr": float(np.corrcoef(need_nl, got_nl)[0, 1]),
+              "linear_max_rel_dev": rel(need_li, got_li)}
     (args.output / "metrics.json").write_text(json.dumps(m, indent=2))
 
     # ---- figure -------------------------------------------------------------
@@ -127,7 +159,7 @@ def main():
 
     a = ax[0, 0]
     a.axvspan(leafv.min(), leafv.max(), color=GRAY, alpha=0.15)
-    a.text((leafv.min() + leafv.max()) / 2, -0.85, "operating\nleaf voltages", ha="center", color=MUTED)
+    a.text(leafv.min() + 0.08, 0.55, "operating\nleaf voltages", ha="left", color=MUTED)
     for amp, col in ((2.0, BLUE), (32.0, ORANGE)):
         v = sign_law[amp]
         a.plot(thrs, v.mean(1), color=col, lw=2, label=f"ping amplitude {amp:g}")
@@ -165,14 +197,17 @@ def main():
     a.set_title("C. Two pings and a teacher train the tree; no error signal", loc="left", color=INK)
 
     a = ax[1, 1]
-    tt = rd.t
-    a.plot(tt, d0, color=GRAY, lw=2, label=f"free ping   (Ca {ca0:.3g})")
-    a.plot(tt, db, color=BLUE, lw=2, label=f"teacher ping (Ca {cab:.3g})")
-    a.axhline(rd.ca_thr, color=ORANGE, lw=1, ls="--", label="Ca-unblock midpoint")
-    a.set_xlabel("time after the ping leaves the soma")
-    a.set_ylabel("local voltage at an active synapse")
-    a.set_title("D. Up, then down: the same ping samples two local states", loc="left", color=INK)
-    a.legend(frameon=False, loc="center right")
+    lim = 1.08 * max(np.abs(need_nl).max(), np.abs(got_nl).max())
+    a.plot([-lim, lim], [-lim, lim], color=MUTED, lw=1, ls="--", label="exact credit")
+    a.scatter(need_li, got_li, s=34, facecolors="none", edgecolors=GRAY, lw=1.2,
+              label=f"linear tree (max dev {m['D']['linear_max_rel_dev']:.1e})")
+    a.scatter(need_nl, got_nl, s=14, color=BLUE,
+              label=f"nonlinear tree (r = {m['D']['nonlinear_corr']:.4f})")
+    a.set_xlim(-lim, lim); a.set_ylim(-lim, lim)
+    a.set_xlabel("voltage change the exact update needs, dv_i")
+    a.set_ylabel("what the synapse measures, log(Ca_teach / Ca_free) / k")
+    a.set_title("D. What each synapse measures vs what it needs", loc="left", color=INK)
+    a.legend(frameon=False, loc="upper left")
     fig.savefig(args.output / "ping_state.png", dpi=150)
 
 
