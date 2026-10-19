@@ -1,0 +1,25 @@
+{
+  "units": "dimensionless",
+  "input": {
+    "cluster_leaves": [
+      2,
+      3
+    ],
+    "split_leaves": [
+      2,
+      5
+    ],
+    "current_per_active_leaf": 1.0
+  },
+  "passive_soma_max_abs_difference": 4.440892098500626e-16,
+  "passive_branch_root_final_abs_difference": 0.6449623541615239,
+  "passive_axial_current_final_abs_difference": 0.5159698833292196,
+  "passive_energy_max_upward_step": -0.00017228811881508932,
+  "passive_soma_ping_max_abs_difference": 4.440892098500626e-16,
+  "passive_soma_ping_response_at_step_150": 0.46759274322517075,
+  "nonlinear_soma_cluster_final": 1.7832126299210986,
+  "nonlinear_soma_split_final": 1.3326596379389923,
+  "illustrative_threshold_calibrated_midpoint": 1.5579361339300455,
+  "cluster_upward_crossings": 1,
+  "split_upward_crossings": 0
+}
