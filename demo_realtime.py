@@ -90,7 +90,8 @@ def plot(args, m):
     plt.rcParams.update({"font.size": 9, "axes.edgecolor": MUTED, "axes.labelcolor": INK,
                          "xtick.color": MUTED, "ytick.color": MUTED,
                          "axes.spines.top": False, "axes.spines.right": False})
-    fig, ax = plt.subplots(1, 3, figsize=(15, 4.8), constrained_layout=True)
+    fig, axs = plt.subplots(2, 2, figsize=(13, 9), constrained_layout=True)
+    ax = axs.ravel()
     al = m["A_B_alignment"]
     names = list(al)
     for k, key, title in ((0, "mean_update", "A. Bias: trial-averaged update"),
@@ -113,13 +114,31 @@ def plot(args, m):
         a.scatter(accs, [i] * len(accs), color=BLUE if np.mean(accs) >= 0.9 else ORANGE, s=24, zorder=3)
         a.text(1.02, i, f"mean {np.mean(accs):.2f}", transform=a.get_yaxis_transform(),
                va="center", color=MUTED)
-    a.axvline(2 / 3, color=MUTED, lw=0.8, ls="--")
-    a.text(2 / 3, len(tn) - 0.4, "majority guess", color=MUTED, ha="center")
+    if "C_cluster_calibrate_only" in m:
+        cal = [r["acc"] for r in m["C_cluster_calibrate_only"]]
+        a.axvspan(min(cal), max(cal), color=ORANGE, alpha=0.12)
+        a.text(np.mean(cal), -0.75, "bias-only training", color=MUTED, ha="center")
     a.set_yticks(range(len(tn)), tn)
     a.invert_yaxis()
     a.set_xlim(0, 1.05)
     a.set_xlabel("held-out accuracy (+-5% amplitude jitter, 30 patterns)")
-    a.set_title("C. Training in real time, 8-compartment trunk", loc="left", color=INK)
+    a.set_title("C. Cluster task: shuffled labels do as well", loc="left", color=INK)
+
+    a = ax[3]
+    if "D_side_task" in m:
+        D = m["D_side_task"]
+        dn = list(D)
+        for i, n in enumerate(dn):
+            accs = [r["acc"] for r in D[n]]
+            a.scatter(accs, [i] * len(accs), color=BLUE if np.mean(accs) >= 0.9 else ORANGE, s=24, zorder=3)
+            a.text(1.02, i, f"mean {np.mean(accs):.2f}", transform=a.get_yaxis_transform(),
+                   va="center", color=MUTED)
+        a.axvline(0.5, color=MUTED, lw=0.8, ls="--")
+        a.set_yticks(range(len(dn)), dn)
+        a.invert_yaxis()
+        a.set_xlim(0, 1.05)
+        a.set_xlabel("held-out accuracy (left cluster high / right cluster low)")
+        a.set_title("D. A task the cell cannot solve by itself", loc="left", color=INK)
     fig.savefig(args.output / "realtime.png", dpi=150)
 
 
