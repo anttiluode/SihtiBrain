@@ -53,6 +53,17 @@ python demo.py --output runs/first_gate
 
 ![Third gate](docs/ping_state.png)
 
+## Fourth gate: context at the tuft
+
+[`docs/TUFT_CONTEXT.md`](docs/TUFT_CONTEXT.md) (`tuft_gate.py`, `demo_tuft.py`, `tests/test_tuft_gate.py`) adds a trunk and an apical tuft to the same basal tree and moves the context there.
+
+* **The soma is the only door.** Because the soma separates the apical and basal trees, apical context reaches every basal synapse exactly as if injected at the soma, scaled by one number α (identity residual ≤ 2.4e-16 at nonlinear states). It cannot change *which* synapses get credit, only how much.
+* **α collapses with trunk length** (0.77 → 0.012 at 8 compartments → 0.0002 at 16). Direction stays exact (alignment ≈ 0.99), but at 1 % calcium read noise alignment falls 0.96 → 0.09 at 8 compartments. One regenerative hotspot buys only 3–6×.
+* **So long-range context has to travel as an event.** A ternary code (burst / nothing / pause) keeps alignment at 0.93–0.95 regardless of noise and separates as well as ideal graded context (4/4). One-sided bursts fail (0/4): with no way to say "less", outputs can only be pushed up.
+* **Constraint for multi-column designs:** through its own cable, the tuft can tell the basal tree only one number at a time; branch-specific context must come from other cells or columns.
+
+![Fourth gate](docs/tuft.png)
+
 ## Three different gradients
 
 Let `v_i` be the membrane voltage at compartment `i`, `g_ij` the axial conductance of an edge, and `I_i` an imposed synaptic current. The model uses unit capacitances and resting voltage zero:

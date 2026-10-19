@@ -54,8 +54,12 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--output", type=Path, default=Path("runs/tuft"))
     ap.add_argument("--epochs", type=int, default=300)
+    ap.add_argument("--replot", action="store_true", help="redraw from existing metrics.json")
     args = ap.parse_args()
     args.output.mkdir(parents=True, exist_ok=True)
+    if args.replot:
+        plot(args, json.loads((args.output / "metrics.json").read_text()))
+        return
     xs, ys = task()
     m = {"units": "dimensionless", "probe": "30 epochs of exact gradient per seed",
          "context_strength_beta_graded": 0.2, "event_size": 0.05, "event_dead_zone": 0.06}
@@ -127,7 +131,7 @@ def plot(args, m):
                label="best single hotspot, still monostable")
     a.set_xlabel("trunk length (compartments between soma and tuft)")
     a.set_ylabel("context reaching the soma, alpha")
-    a.set_title("A. Apical context decays exponentially; one hotspot buys ~3x", loc="left", color=INK)
+    a.set_title("A. Apical context decays exponentially; one hotspot buys 3-6x", loc="left", color=INK)
     a.legend(frameon=False)
 
     a = ax[0, 1]
