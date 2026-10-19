@@ -31,6 +31,51 @@ python demo.py --output runs/first_gate
 
 `runs/first_gate/metrics.json` records the exact numbers and `sihtibrain.png` shows the traces. The checked-in figure was produced by the same command; rerun to compare it to the JSON.
 
+## Second gate: the ping as a nudge
+
+[`docs/PING_AS_NUDGE.md`](docs/PING_AS_NUDGE.md) (`ping_nudge.py`, `demo_ping_nudge.py`, `tests/test_ping_nudge.py`) gives the branch roots a *voltage-dependent* current and asks what the ping must be for "purify → summate → ping" to close:
+
+* **Why the soma was blind:** 4 of the tree's 7 cable modes have exactly zero amplitude at the soma, and the cluster-minus-split input lies entirely in them. A fixed ping in any linear tree is blind by superposition.
+* **Ping as error current = exact gradient:** injecting `−β(v₀ − y)` at the soma and relaxing again gives the gradient of the somatic loss by equilibrium propagation (error vs finite differences ∝ β², slope 2.02). The synaptic rule is local: presynaptic activity × how far the ping moved the voltage at that synapse; reciprocity `Z_i0 = Z_0i` makes it exact. On a cluster-detection task that **no passive tree can solve for any parameters** (proven floor, 4/6), error-pings train the nonlinear tree to **6/6 on 4/4 seeds**.
+* **Ping as kick:** with bistable branches and *identical somatic voltage*, the same ping flips only the clustered branch into a persistent plateau (any amplitude in [4.07, 6.28)). It reads hidden branch state and writes it.
+
+![Second gate](docs/ping_nudge.png)
+
+## Third gate: the ping with state, up and down
+
+[`docs/PING_WITH_STATE.md`](docs/PING_WITH_STATE.md) (`ping_state.py`, `demo_ping_state.py`, `tests/test_ping_state.py`) removes the error current. A weak teacher shifts the soma, and two returning pings (one before the teacher, one during) evoke calcium at each active synapse through an NMDA-like unblock. Each synapse writes the fractional change in its own calcium. No signal anywhere encodes the error.
+
+* **Exact in the linear tree:** below the unblock threshold, `log(Ca_teach / Ca_free) / k = Δv_i`, the equilibrium-propagation update (max deviation 6.5e-5), at any ping amplitude. The credit travels in the slow, reciprocal cable; the ping only samples it, so uneven bAP attenuation cancels.
+* **Trains the nonlinear tree:** 4/4 seeds, 6/6 patterns, margin +0.142; absolute-calcium comparison 0/4; shuffled teacher 1/4; no ping 0/4.
+* **Sign law:** a synapse whose local voltage plus ping sits past the unblock midpoint gets inverted credit (alignment ≈ −0.99) and the tree learns the opposite task.
+* **Spike shape that varies with state** at the measured depth (~8%) neither helps nor hurts, even with Brunner's proximal/distal sign flip. Calcium read noise is the real weak point.
+* **After the divergence:** the teacher is the "later window" at the apical tuft (prior art: Guerguiev, Lillicrap & Richards 2017). A loop with no outside information can hold state but cannot learn a task. The next gate puts the context at the tuft, where the shaped ping may become the only channel to basal synapses.
+
+![Third gate](docs/ping_state.png)
+
+## Fourth gate: context at the tuft
+
+[`docs/TUFT_CONTEXT.md`](docs/TUFT_CONTEXT.md) (`tuft_gate.py`, `demo_tuft.py`, `tests/test_tuft_gate.py`) adds a trunk and an apical tuft to the same basal tree and moves the context there.
+
+* **The soma is the only door.** Because the soma separates the apical and basal trees, apical context reaches every basal synapse exactly as if injected at the soma, scaled by one number α (identity residual ≤ 2.4e-16 at nonlinear states). It cannot change *which* synapses get credit, only how much.
+* **α collapses with trunk length** (0.77 → 0.012 at 8 compartments → 0.0002 at 16). Direction stays exact (alignment ≈ 0.99), but at 1 % calcium read noise alignment falls 0.96 → 0.09 at 8 compartments. One regenerative hotspot buys only 3–6×.
+* **So long-range context has to travel as an event.** A ternary code (burst / nothing / pause) keeps alignment at 0.93–0.95 regardless of noise and separates as well as ideal graded context (4/4). One-sided bursts fail (0/4): with no way to say "less", outputs can only be pushed up.
+* **Constraint for multi-column designs:** through its own cable, the tuft can tell the basal tree only one number at a time; branch-specific context must come from other cells or columns.
+
+![Fourth gate](docs/tuft.png)
+
+## Fifth gate: real-time credit, against a three-factor rule
+
+[`docs/REALTIME_CREDIT.md`](docs/REALTIME_CREDIT.md) (`realtime_gate.py`, `demo_realtime.py`, `tests/test_realtime_gate.py`): the soma fires its own pings, a late tuft context changes burst probability, synapses integrate calcium continuously, and training is evaluated on held-out jittered inputs.
+
+* **Sign theorem.** In one cell the Jacobian is an M-matrix, so every soma–synapse transfer impedance is positive and every active synapse's gradient has the sign of the error. Per-synapse credit can only change magnitudes.
+* **Real-time credit works** on a task the cell cannot solve by itself (left cluster high, right low): ping-local 4/4 held out, reshuffled labels at chance.
+* **A three-factor rule** (presynaptic activity × change in burst count) **matches it**: 4/4, same margins, equal bias and less single-trial variance.
+* **The clustered-vs-split task cannot rank credit rules:** labels reshuffled every epoch reach held-out 0.84, the same as either rule, because the built-in branch nonlinearity sorts the patterns once the weights are equal.
+* **Stopping test for this repository:** networks with inhibitory connections, the only place per-synapse credit could beat a three-factor rule.
+
+![Fifth gate](docs/realtime.png)
+
 ## Three different gradients
 
 Let `v_i` be the membrane voltage at compartment `i`, `g_ij` the axial conductance of an edge, and `I_i` an imposed synaptic current. The model uses unit capacitances and resting voltage zero:
