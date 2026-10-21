@@ -22,6 +22,25 @@ Four seeds (41, 97, 127, 211), 800 *balanced* examples/seed, 3,200 examples per 
 
 Per-seed primary inhibitory accuracies: **99.875%, 99.875%, 100%, 100%**. Per-seed primary excitation: **100%, 100%, 100%, 100%**. Every trial is paired in hidden-input distance from the peak with a trial of the other class.
 
+### Sham repeat audit: why the score is identical across noise scales
+
+An external review correctly flagged the identical **51.09%** sham score at all three positive noise levels as worth investigating. **This is a real two-sample noisy comparison, not a constant guess.** The code draws a noisy baseline and an independent noisy sham reading:
+
+```text
+baseline = f(I) + sigma * Z_baseline
+sham     = f(I) + sigma * Z_sham
+sham_vote = 1[sham - baseline > 0]
+          = 1[sigma * (Z_sham - Z_baseline) > 0]
+```
+
+For every **positive** `sigma`, the sign depends on the two standard-normal draws but not the scale. Each `run_batch` restarts the same seed and consumes the same draws in the same order. Therefore all the sham predictions—and their exact 51.09375% pooled accuracy—are **identical at 0.015, 0.04 and 0.08**. At `sigma=0` the difference is identically zero and the frozen strict `> 0` tie rule guesses class 0 on every case (50% on this balanced dataset). Changing the seed changes the noise realizations. This invariance reflects a **scale-free sign decision on pure noise**; it is not a new finding or a noise robustness result.
+
+The test suite separately checks sham equality across positive scales and the special noiseless tie case. Do not interpret its stable accuracy as a physical invariant or evidence of useful information. The baseline-only and sham outcomes have no hidden-class signal by construction.
+
+### Predictability from the first-order expansion
+
+For small nonzero `delta`, `f(I + delta) - f(I) ≈ f'(I) delta`. Both probe directions expose the sign of the derivative. With equal magnitude, symmetric measurement noise and this smooth symmetric activation, **an inhibitory-specific advantage was not expected**. Thus G1 is an executable illustration of derivative-based observability, while the predeclared G2 failure is consistent with theory. A finite probe on a different, asymmetric activation need not produce numerically identical excitation and inhibition accuracies, but that would not alone establish a useful inhibitor-specific advantage.
+
 At zero noise, both perturbation directions decode perfectly. With independent noise on each read, the effective differential noise standard deviation is \`sqrt(2) × sigma\`. The performance drop at higher noise is therefore expected. Nothing in the test measures synaptic plasticity or task error.
 
 ## Why the result works (and what it fails to establish)
