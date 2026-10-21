@@ -46,6 +46,23 @@ class InhibitorySensitivityTests(unittest.TestCase):
         self.assertEqual(c["passive_only"]["nonlinear_evaluations"], 1)
         self.assertIn("NOT MEASURED", c["compute_savings"])
 
+    def test_sham_is_noise_driven_but_scale_invariant(self):
+        # A real sham comparison uses TWO independent noisy observations:
+        # sign(sigma * (z_sham - z_baseline)) is unchanged when sigma > 0.
+        # Reinitializing the seed reproduces the standard-normal draws.
+        for seed in (41, 97, 127, 211):
+            sham_at_scales = [
+                run_batch(seed, sigma)["accuracy"]["sham_two_reads"]
+                for sigma in (0.015, 0.04, 0.08)
+            ]
+            self.assertEqual(sham_at_scales[0], sham_at_scales[1])
+            self.assertEqual(sham_at_scales[1], sham_at_scales[2])
+            # With no noise both readings are exactly the same, and
+            # the >0 tie rule gives class 0 for every balanced case.
+            self.assertEqual(
+                run_batch(seed, 0.0)["accuracy"]["sham_two_reads"], 0.5
+            )
+
     def test_reproducible_and_validates_input(self):
         self.assertEqual(run_batch(97, 0.04), run_batch(97, 0.04))
         with self.assertRaises(ValueError):
