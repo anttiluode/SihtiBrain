@@ -1,0 +1,31 @@
+name: Inhibitory sensitivity gate
+
+on:
+  push:
+    branches:
+      - experiment/inhibitory-sensitivity-gate-2026-10-21
+  pull_request:
+    paths:
+      - 'inhibitory_sensitivity_gate.py'
+      - 'tests/test_inhibitory_sensitivity_gate.py'
+      - 'docs/INHIBITORY_SENSITIVITY_*.md'
+      - '.github/workflows/inhibitory-sensitivity.yml'
+  workflow_dispatch:
+
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Run frozen regression tests
+        run: python -m unittest discover -s tests -p 'test_inhibitory_sensitivity_gate.py' -v
+      - name: Run reproducible experiment
+        run: python inhibitory_sensitivity_gate.py --output results/inhibitory_sensitivity_gate.json
+      - name: Retain machine-readable receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: inhibitory-sensitivity-receipt
+          path: results/inhibitory_sensitivity_gate.json
